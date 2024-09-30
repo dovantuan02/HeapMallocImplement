@@ -42,7 +42,7 @@
  * task.h is included from an application file. */
 #define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
-#include "config.h"
+#include "heap_4.h"
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
@@ -124,15 +124,13 @@ typedef struct A_BLOCK_LINK
  * heapVALIDATE_BLOCK_POINTERassert. */
     #define heapPROTECT_BLOCK_POINTER( pxBlock )    ( ( BlockLink_t * ) ( ( ( portPOINTER_SIZE_TYPE ) ( pxBlock ) ) ^ xHeapCanary ) )
 #else
-
     #define heapPROTECT_BLOCK_POINTER( pxBlock )    ( pxBlock )
-
 #endif /* configENABLE_HEAP_PROTECTOR */
 
 /* Assert that a heap block pointer is within the heap bounds. */
-#define heapVALIDATE_BLOCK_POINTER( pxBlock )                          \
+#define heapVALIDATE_BLOCK_POINTER( pxBlock )                    \
     assert( ( ( uint8_t * ) ( pxBlock ) >= &( ucHeap[ 0 ] ) ) && \
-                  ( ( uint8_t * ) ( pxBlock ) <= &( ucHeap[ configTOTAL_HEAP_SIZE - 1 ] ) ) )
+            ( ( uint8_t * ) ( pxBlock ) <= &( ucHeap[ configTOTAL_HEAP_SIZE - 1 ] ) ) )
 
 /*-----------------------------------------------------------*/
 
@@ -344,6 +342,15 @@ void * pvPortMalloc( size_t xWantedSize )
     return pvReturn;
 }
 /*-----------------------------------------------------------*/
+
+void* pvSafeMalloc(size_t xWantedSize) {
+    size_t xActualSize = xWantedSize + sizeof(BlockLink_t);
+    if ((xActualSize % portBYTE_ALIGNMENT) != 0) {
+        xActualSize += (portBYTE_ALIGNMENT - (xActualSize % portBYTE_ALIGNMENT));
+    }
+    return pvPortMalloc(xActualSize);
+}
+
 
 void vPortFree( void * pv )
 {

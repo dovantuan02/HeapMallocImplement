@@ -5,10 +5,12 @@
 #include "stdint.h"
 #include "assert.h"
 
-#define configTOTAL_HEAP_SIZE       4096
+#define configTOTAL_HEAP_SIZE       131072
 
-#define configSUPPORT_DYNAMIC_ALLOCATION 1
-#define portBYTE_ALIGNMENT       1
+#define configSUPPORT_DYNAMIC_ALLOCATION    1
+#define portBYTE_ALIGNMENT                  32
+
+#define configHEAP_CLEAR_MEMORY_ON_FREE     1
 
 #define portMAX_DELAY    ( TickType_t ) 0xffffffffffffffffU
 #define portPOINTER_SIZE_TYPE    size_t
@@ -53,6 +55,7 @@
 
 
 extern void * pvPortMalloc( size_t xWantedSize );
+extern void * pvSafeMalloc( size_t xWantedSize );
 extern void * pvPortCalloc( size_t xNum, size_t xSize );
 extern void vPortFree( void * pv );
 extern size_t xPortGetFreeHeapSize( void );

@@ -15,7 +15,7 @@ main: Malloc_implement.o heap_4.o $(OBJ)
 
 
 # Specific rules for main and Malloc_implement
-Malloc_implement.o: Malloc_implement.c
+Malloc_implement.o: Malloc_implement.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 heap_4.o: heap_4.c
@@ -25,4 +25,4 @@ heap_4.o: heap_4.c
 all: main
 
 clean:
-	rm -f Malloc_implement.o Malloc_implement
+	rm -f main Malloc_implement.o heap_4.o
