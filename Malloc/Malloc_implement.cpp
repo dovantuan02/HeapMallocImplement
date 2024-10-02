@@ -1,5 +1,7 @@
 #include "bits/stdc++.h"
+#include "stdint.h"
 #include "heap_4.h"
+#include "vector_impl.hpp"
 void allocateMemoryWithHeap4();
 
 int main() {
@@ -42,11 +44,11 @@ int main() {
 		vec.push_back(Vector<uint8_t>(bytes, bytes + nBytes));
 	}
 	printf("Free Heap Size: %d\n", xPortGetFreeHeapSize() );
-	// for( int i = 0; i < 10; i++) {
-	// 	vec.push_back(Vector<uint8_t>(bytes, bytes + nBytes));
-	// }
-	// printf("Free Heap Size: %d\n", xPortGetFreeHeapSize() );
 
+	for( int i = 0; i < 10; i++) {
+		vec.push_back(Vector<uint8_t>(bytes, bytes + nBytes));
+	}
+	printf("Free Heap Size: %d\n", xPortGetFreeHeapSize() );
 
 	// vec.print(); // In ra: 10 20 30 40
 
@@ -71,7 +73,36 @@ int main() {
 
 	printf("Free Heap Size: %d\n", xPortGetFreeHeapSize() );
 #else 
-	allocateMemoryWithHeap4();
+	// allocateMemoryWithHeap4();
+
+	uint8_t *ptr = NULL;
+	uint8_t *pBlock[13] = {NULL};
+	pBlock[0] = (uint8_t*) pvPortMalloc(56074 * sizeof(uint8_t));
+	for (int i = 1; i < 13; i++) {
+		pBlock[i] = (uint8_t*) pvPortMalloc(7000 * sizeof(uint8_t));
+	}
+	// uint8_t *pBlock1 = (uint8_t*) pvPortMalloc(3923 * sizeof(uint8_t));
+	// uint8_t *pBlock2 = (uint8_t*) pvPortMalloc(3997 * sizeof(uint8_t));
+	// uint8_t *pBlock3 = (uint8_t*) pvPortMalloc(3587 * sizeof(uint8_t));
+	// uint8_t *pBlock4 = (uint8_t*) pvPortMalloc(3587 * sizeof(uint8_t));
+	// uint8_t *pBlock5 = (uint8_t*) pvPortMalloc(3587 * sizeof(uint8_t));
+	// uint8_t *pBlock6 = (uint8_t*) pvPortMalloc(3587 * sizeof(uint8_t));
+	// uint8_t *pBlock7 = (uint8_t*) pvPortMalloc(3923 * sizeof(uint8_t));
+	// uint8_t *pBlock8 = (uint8_t*) pvPortMalloc(3923 * sizeof(uint8_t));
+	// uint8_t *pBlock9 = (uint8_t*) pvPortMalloc(3997 * sizeof(uint8_t));
+	// uint8_t *pBlock10 = (uint8_t*) pvPortMalloc(3587 * sizeof(uint8_t));
+	// uint8_t *pBlock11 = (uint8_t*) pvPortMalloc(3587 * sizeof(uint8_t));
+	// uint8_t *pBlock12 = (uint8_t*) pvPortMalloc(3587 * sizeof(uint8_t));
+	// memset(pBlock, 10, 100);
+	for (int i = 0; i < 100; i++) {
+		pBlock[0][i] = i;
+	}
+	ptr = &pBlock[0][0];
+
+	printf("%d\n", ptr[56]);
+	printf("free heap size: %d bytes\n", xPortGetFreeHeapSize());
+	vPortFree((void**) &pBlock);
+	printf("free heap size: %d bytes\n", xPortGetFreeHeapSize());
 #endif
 	return 0;
 }
@@ -93,8 +124,10 @@ void allocateMemoryWithHeap4() {
     printf("Free heap size after 10KB allocation: %d bytes\n", xPortGetFreeHeapSize());
 
     // Step 2: Free 2 blocks of 2KB each (4KB freed)
-    vPortFree(pvAllocatedBlocks[1]);  // Free block 1 (2KB)
-    vPortFree(pvAllocatedBlocks[3]);  // Free block 3 (2KB)
+    vPortFree(&pvAllocatedBlocks[1]);  // Free block 1 (2KB)
+	// pvAllocatedBlocks[1] = NULL;
+    vPortFree(&pvAllocatedBlocks[3]);  // Free block 3 (2KB)
+	// pvAllocatedBlocks[3] = NULL;
     printf("Free heap size after freeing 4KB: %d bytes\n", xPortGetFreeHeapSize());
 
     // Step 3: Try to allocate a large block of 50KB
@@ -108,12 +141,13 @@ void allocateMemoryWithHeap4() {
 
     // Clean up: Free remaining memory
     for (int i = 0; i < 5; i++) {
+		printf("Block :%d\n", i);
         if (pvAllocatedBlocks[i] != NULL) {
-            vPortFree(pvAllocatedBlocks[i]);
+            vPortFree(&pvAllocatedBlocks[i]);
         }
     }
     if (largeBlock != NULL) {
-        vPortFree(largeBlock);
+        vPortFree(&largeBlock);
     }
     printf("Free heap size after cleanup: %d bytes\n", xPortGetFreeHeapSize());
 }

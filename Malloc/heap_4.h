@@ -36,8 +36,6 @@
 #define PRIVILEGED_DATA
 #define FREERTOS_SYSTEM_CALL
 
-#define FATAL(fmt, ...)     printf(fmt, "FATAL - ", ##__VA_ARGS__)
-
 #define configASSERT(x)     assert((x))
 
 
@@ -57,7 +55,7 @@
 extern void * pvPortMalloc( size_t xWantedSize );
 extern void * pvSafeMalloc( size_t xWantedSize );
 extern void * pvPortCalloc( size_t xNum, size_t xSize );
-extern void vPortFree( void * pv );
+extern void vPortFree( void ** pv );
 extern size_t xPortGetFreeHeapSize( void );
 extern void vPortHeapResetState( void );
 #endif
