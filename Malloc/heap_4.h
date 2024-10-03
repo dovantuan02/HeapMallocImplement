@@ -5,7 +5,7 @@
 #include "stdint.h"
 #include "assert.h"
 
-#define configTOTAL_HEAP_SIZE       131072
+#define configTOTAL_HEAP_SIZE               10485760     // 4Mb
 
 #define configSUPPORT_DYNAMIC_ALLOCATION    1
 #define portBYTE_ALIGNMENT                  32

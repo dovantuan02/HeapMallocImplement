@@ -369,7 +369,7 @@ inline void Vector<T>::shrink_to_fit() {
 		for (size_t i = 0; i < _size; ++i) {
 			new_elements[i] = _elements[i];
 		}
-		vPortFree((void**)&_elements);
+		vPortFree((void**) & _elements);
 		_elements = new_elements;
 		_space	  = _size;
 	}
